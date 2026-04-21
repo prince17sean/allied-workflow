@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>深圳艾利德国际贸易有限公司 — 出口工作流程</title>
+  <style>
+    /* ─── 基础重置 ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #050d1a;
+      --surface:   #0a1628;
+      --card:      #0d1f38;
+      --border:    rgba(0,200,255,0.18);
+      --glow:      #00c8ff;
+      --glow2:     #0066ff;
+      --accent:    #00e5ff;
+      --accent2:   #7b2fff;
+      --text:      #d0eaf8;
+      --muted:     #6b8cad;
+      --success:   #00ff9d;
+      --warn:      #ffb800;
+      --danger:    #ff4466;
+      --font:      'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── 动态背景网格 ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* ─── 头部 ─── */
+    header {
+      position: relative; z-index: 10;
+      padding: 24px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(0,200,255,0.06) 0%, transparent 100%);
+    }
+    .logo-area { display: flex; align-items: center; gap: 14px; }
+    .logo-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--glow2), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 20px rgba(0,200,255,0.4);
+    }
+    .logo-text { display: flex; flex-direction: column; }
+    .logo-text .company { font-size: 18px; font-weight: 700; letter-spacing: 1px; color: #fff; }
+    .logo-text .dept { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+    .header-tag {
+      font-size: 11px; letter-spacing: 2px; padding: 5px 14px;
+      border: 1px solid var(--border); border-radius: 20px;
+      color: var(--accent); background: rgba(0,200,255,0.06);
+    }
+
+    /* ─── 英雄区 ─── */
+    .hero {
+      position: relative; z-index: 5;
+      text-align: center; padding: 60px 20px 40px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800; letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--accent), #fff 50%, var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.2; margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: 15px; color: var(--muted); max-width: 560px; margin: 0 auto 30px;
+      line-height: 1.8;
+    }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 10px;
+    }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 700; color: var(--accent); }
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+
+    /* ─── 流程时间线 ─── */
+    .timeline-section {
+      position: relative; z-index: 5;
+      max-width: 1200px; margin: 0 auto; padding: 40px 20px 60px;
+    }
+    .section-title {
+      font-size: 13px; letter-spacing: 4px; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 40px; text-align: center;
+      display: flex; align-items: center; gap: 12px; justify-content: center;
+    }
+    .section-title::before, .section-title::after {
+      content: ''; flex: 1; max-width: 120px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border));
+    }
+    .section-title::after { background: linear-gradient(90deg, var(--border), transparent); }
+
+    /* 步骤卡片网格 */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ─── 单个步骤卡片 ─── */
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .step-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,200,255,0.05), transparent 60%);
+      pointer-events: none;
+    }
+    .step-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 40px rgba(0,200,255,0.15), 0 8px 32px rgba(0,0,0,0.4);
+      border-color: rgba(0,200,255,0.4);
+    }
+    .step-card.expanded { border-color: var(--accent); }
+
+    /* 卡片头部 */
+    .card-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; letter-spacing: 0;
+      background: linear-gradient(135deg, var(--glow2), var(--glow));
+      color: #fff;
+      box-shadow: 0 0 16px rgba(0,200,255,0.3);
+    }
+    .step-icon {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      background: rgba(0,200,255,0.08);
+      border: 1px solid var(--border);
+    }
+    .card-title-area { flex: 1; }
+    .card-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .card-badge {
+      display: inline-block; font-size: 10px; letter-spacing: 1px;
+      padding: 2px 8px; border-radius: 8px;
+      background: rgba(0,200,255,0.1); color: var(--accent); border: 1px solid var(--border);
+    }
+    .card-badge.warn { background: rgba(255,184,0,0.1); color: var(--warn); border-color: rgba(255,184,0,0.3); }
+    .card-badge.success { background: rgba(0,255,157,0.1); color: var(--success); border-color: rgba(0,255,157,0.3); }
+    .card-badge.upload { background: rgba(123,47,255,0.15); color: #b47aff; border-color: rgba(123,47,255,0.3); }
+
+    /* 展开箭头 */
+    .expand-btn {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(0,200,255,0.08); border: 1px solid var(--border);
+      color: var(--accent); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      transition: transform 0.3s, background 0.2s;
+      flex-shrink: 0;
+    }
+    .step-card.expanded .expand-btn { transform: rotate(180deg); background: rgba(0,200,255,0.15); }
+
+    /* 卡片内容 */
+    .card-summary { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    .card-detail {
+      display: none;
+      margin-top: 18px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+    .step-card.expanded .card-detail { display: block; }
+
+    .detail-list { list-style: none; padding: 0; }
+    .detail-list li {
+      font-size: 13px; color: var(--text);
+      padding: 6px 0 6px 20px; position: relative; line-height: 1.65;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .detail-list li:last-child { border-bottom: none; }
+    .detail-list li::before {
+      content: '▸';
+      position: absolute; left: 0; color: var(--accent); font-size: 10px; top: 8px;
+    }
+    .detail-list li.warn::before { color: var(--warn); }
+    .detail-list li.note { font-size: 12px; color: var(--muted); font-style: italic; }
+    .detail-list li.note::before { content: '💡'; font-size: 12px; }
+
+    /* 子步骤 */
+    .substeps {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 12px;
+    }
+    .substep {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(0,200,255,0.08);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+    .substep-title { font-weight: 600; color: var(--accent); font-size: 12px; margin-bottom: 4px; }
+    .substep-body { color: var(--muted); line-height: 1.6; }
+
+    /* ─── 上传区域 ─── */
+    .upload-zone {
+      margin-top: 16px;
+      border: 2px dashed rgba(123,47,255,0.4);
+      border-radius: 12px;
+      background: rgba(123,47,255,0.05);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--accent2);
+      background: rgba(123,47,255,0.1);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 28px; margin-bottom: 8px; }
+    .upload-label { font-size: 13px; color: #b47aff; font-weight: 600; margin-bottom: 4px; }
+    .upload-hint { font-size: 11px; color: var(--muted); }
+
+    /* 图片预览 */
+    .preview-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 8px; margin-top: 12px;
+    }
+    .preview-item {
+      position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-remove {
+      position: absolute; top: 3px; right: 3px; width: 18px; height: 18px;
+      border-radius: 50%; background: rgba(255,50,80,0.85); border: none;
+      color: #fff; font-size: 10px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .file-count {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--success); margin-top: 8px;
+    }
+
+    /* 提交按钮 */
+    .submit-btn {
+      margin-top: 16px;
+      padding: 10px 24px;
+      border: none; border-radius: 8px;
+      background: linear-gradient(135deg, var(--glow2), var(--accent2));
+      color: #fff; font-size: 13px; font-weight: 600;
+      cursor: pointer; letter-spacing: 0.5px;
+      box-shadow: 0 0 20px rgba(0,102,255,0.3);
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+    .submit-btn:hover { opacity: 0.9; transform: scale(1.01); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* 提交状态 */
+    .submit-status {
+      display: none; margin-top: 10px; font-size: 12px;
+      text-align: center; padding: 8px; border-radius: 8px;
+    }
+    .submit-status.success {
+      display: block; color: var(--success);
+      background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2);
+    }
+    .submit-status.error {
+      display: block; color: var(--danger);
+      background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.2);
+    }
+
+    /* ─── 流程箭头连接 ─── */
+    .flow-connector {
+      display: flex; align-items: center; justify-content: center;
+      padding: 8px 0;
+      color: var(--muted); font-size: 12px; letter-spacing: 2px;
+      grid-column: 1 / -1;
+    }
+    .flow-connector svg { width: 24px; height: 24px; opacity: 0.4; }
+
+    /* ─── 底部 ─── */
+    footer {
+      position: relative; z-index: 5;
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 12px; color: var(--muted);
+    }
+    footer span { color: var(--accent); }
+
+    /* ─── 全流程导航栏 ─── */
+    .nav-timeline {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5,13,26,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex; align-items: center; gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-timeline::-webkit-scrollbar { display: none; }
+    .nav-step {
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .nav-dot {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(0,200,255,0.08); border: 1px solid var(--border);
+      color: var(--muted); font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .nav-dot:hover, .nav-dot.active {
+      background: rgba(0,200,255,0.2); color: var(--accent);
+      border-color: var(--accent);
+    }
+    .nav-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .nav-arrow { color: rgba(0,200,255,0.25); font-size: 12px; flex-shrink: 0; }
+
+    /* ─── 响应式 ─── */
+    @media (max-width: 640px) {
+      header { padding: 16px 20px; }
+      .hero { padding: 40px 16px 30px; }
+      .timeline-section { padding: 20px 12px 40px; }
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── 扫描线动效 ─── */
+    @keyframes scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+    .scan-line {
+      position: fixed; left: 0; right: 0; height: 2px; z-index: 0;
+      background: linear-gradient(90deg, transparent, rgba(0,200,255,0.15), transparent);
+      animation: scan 8s linear infinite;
+      pointer-events: none;
+    }
+
+    /* ─── 角标装饰 ─── */
+    .corner-tl, .corner-br {
+      position: absolute; width: 12px; height: 12px;
+      border-color: rgba(0,200,255,0.4);
+    }
+    .corner-tl { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
+    .corner-br { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
+
+    /* 高亮标签 */
+    .tag {
+      display: inline-block; font-size: 10px; letter-spacing: 1px;
+      padding: 1px 6px; border-radius: 4px; margin-right: 4px;
+      background: rgba(0,200,255,0.08); color: var(--accent); border: 1px solid var(--border);
+    }
+    .tag.red { background: rgba(255,68,102,0.08); color: var(--danger); border-color: rgba(255,68,102,0.2); }
+    .tag.gold { background: rgba(255,184,0,0.08); color: var(--warn); border-color: rgba(255,184,0,0.2); }
+    .tag.green { background: rgba(0,255,157,0.08); color: var(--success); border-color: rgba(0,255,157,0.2); }
+  </style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<!-- ─── 导航时间线 ─── -->
+<nav class="nav-timeline" id="navTimeline">
+  <div class="nav-step"><a class="nav-dot" href="#step-1" title="获客">01</a><span class="nav-label">获客</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-2" title="报价">02</a><span class="nav-label">报价</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-3" title="订货">03</a><span class="nav-label">订货</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-4" title="支付">04</a><span class="nav-label">支付方式</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-5" title="备货验货">05</a><span class="nav-label">备货验货</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-6" title="报关运输">06</a><span class="nav-label">报关运输</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-7" title="监装提单">07</a><span class="nav-label">监装提单</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-8" title="结汇">08</a><span class="nav-label">结汇</span></div>
+  <span class="nav-arrow">›</span>
+  <div class="nav-step"><a class="nav-dot" href="#step-9" title="风险防范">09</a><span class="nav-label">风险防范</span></div>
+</nav>
+
+<!-- ─── 头部 ─── -->
+<header>
+  <div class="logo-area">
+    <div class="logo-icon">🌐</div>
+    <div class="logo-text">
+      <span class="company">深圳艾利德国际贸易有限公司</span>
+      <span class="dept">Export Workflow System · v2.0</span>
+    </div>
+  </div>
+  <div class="header-tag">INTERNAL SYSTEM</div>
+</header>
+
+<!-- ─── 英雄区 ─── -->
+<section class="hero">
+  <h1>出口工作全流程管理系统</h1>
+  <p>主要出口商品：<strong style="color:var(--accent)">电子产品</strong>　主要市场：<strong style="color:var(--accent)">巴西 · 智利 · 墨西哥</strong></p>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">核心流程</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">主要市场</div></div>
+    <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">上传节点</div></div>
+    <div class="stat-item"><div class="stat-num">AQL</div><div class="stat-label">抽样标准</div></div>
+  </div>
+</section>
+
+<!-- ─── 主内容 ─── -->
+<main class="timeline-section">
+  <div class="section-title">Export Workflow · 完整流程</div>
+
+  <div class="steps-grid">
+
+    <!-- ① 获客 -->
+    <div class="step-card" id="step-1" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">01</div>
+        <div class="step-icon">🎯</div>
+        <div class="card-title-area">
+          <div class="card-title">获客</div>
+          <span class="card-badge">Lead Generation</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">通过多渠道开发境外客户，深耕拉丁美洲核心市场，做好海外市场调研与客户关系管理。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li><span class="tag">线上</span>电商平台推广（阿里巴巴国际站、Made-in-China、亚马逊等）</li>
+          <li><span class="tag">线下</span>参加海内外行业展会（广交会、电子展等），主动拓客</li>
+          <li><span class="tag">转介绍</span>依托现有客户口碑，获取优质买家推荐</li>
+          <li class="warn"><span class="tag gold">调研</span>深入了解目标客户需求偏好与采购习惯</li>
+          <li class="warn">重点关注主要市场：<strong>巴西、智利、墨西哥</strong>，了解各国进口政策与认证要求</li>
+          <li class="note">巴西进口需注意 INMETRO 认证；墨西哥需关注 NOM 标准</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">市场调研要点</div>
+            <div class="substep-body">分析目标市场消费者对电子产品的功能偏好（如充电速度、多语言界面）、价格区间、竞品情况，为报价和产品定制提供依据。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 报价 -->
+    <div class="step-card" id="step-2" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">02</div>
+        <div class="step-icon">💹</div>
+        <div class="card-title-area">
+          <div class="card-title">报价</div>
+          <span class="card-badge warn">Price Quotation</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">明确贸易条款与报价方式，含装柜及仓库费用，注意含税/不含税口径。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li><span class="tag">FOB</span>离岸价：货物到达指定港口后，费用与风险由买方承担</li>
+          <li><span class="tag">CFR</span>成本+运费：我司负责运费，风险在装船后转移</li>
+          <li><span class="tag">CIF</span>成本+保险+运费：我司承担运费与保险，风险在装船后转移</li>
+          <li>我司实际报价中，<strong>装柜费用与仓库费用均由我司负责</strong></li>
+          <li class="warn">报价前务必确认是否含增值税，区分含税价与不含税价</li>
+          <li class="note">建议报价单列明有效期（通常30天），原材料波动较大时需缩短</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">报价单核心要素</div>
+            <div class="substep-body">产品单价 / 最小订购量（MOQ）/ 包装方式 / 交货期 / 贸易条款 / 原产地 / 认证情况</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 订货 -->
+    <div class="step-card" id="step-3" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">03</div>
+        <div class="step-icon">📋</div>
+        <div class="card-title-area">
+          <div class="card-title">订货</div>
+          <span class="card-badge success">Order Placement</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">确认订单后签署采购合同，约定定金比例与账期，在ERP系统录入采购合同。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li>通常由我司向工厂支付 <strong>定金 10%</strong>，余款按月结方式结算</li>
+          <li>在 ERP 系统上准备并下达下单合同，确保信息与客户 PO 一致</li>
+          <li>合同须明确：品名规格、数量、单价、交货期、包装要求</li>
+          <li class="warn">订货前确认工厂备料周期，避免因原材料短缺延误交期</li>
+          <li class="note">大单建议加入质量索赔条款，保护己方权益</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">ERP录单流程</div>
+            <div class="substep-body">登录ERP → 新建采购订单 → 录入供应商、品号、数量、单价、交期 → 审核提交 → 生成采购合同单据 → 发送工厂确认</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 支付方式 -->
+    <div class="step-card" id="step-4" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">04</div>
+        <div class="step-icon">💳</div>
+        <div class="card-title-area">
+          <div class="card-title">支付方式确认</div>
+          <span class="card-badge">Payment Terms</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">与客户协商并确认收款方式，兼顾安全性与便利性，规避收汇风险。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li><span class="tag green">低风险</span><strong>信用证（L/C）</strong>：银行作为中间方，安全性高，适合新客户或大额订单</li>
+          <li><span class="tag">常用</span><strong>电汇（T/T）</strong>：分前TT+后TT组合，灵活高效，适合老客户</li>
+          <li><span class="tag gold">注意</span><strong>直接付款（D/P、D/A）</strong>：付款后交单，需评估客户资信风险</li>
+          <li class="warn">选择支付方式前需完成客户资信审查</li>
+          <li class="note">对拉美新客户建议先采用 L/C 或 30% 前TT + 70% 见提单复印件付款</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">主流支付方式对比</div>
+            <div class="substep-body">L/C（信用证）风险最低，但手续繁琐、费用高；T/T（电汇）速度快，风险由合同比例决定；D/P（付款交单）有一定风险，慎用于新客。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ 备货与验货 ★上传 -->
+    <div class="step-card" id="step-5" onclick="handleCardClick(event, this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">05</div>
+        <div class="step-icon">🔍</div>
+        <div class="card-title-area">
+          <div class="card-title">备货与验货</div>
+          <span class="card-badge upload">📷 图片上传</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">我司人员赴工厂进行现场验货，依照AQL抽样标准核验产品参数与功能，提交验货图片与报告。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li>与生产工厂和包装厂确认生产期限，安排验货日程</li>
+          <li>我司验货人员提前到工厂，确认备货数量与包装状态</li>
+          <li><span class="tag">AQL</span>按 AQL 抽样标准（通常 AQL 1.5/2.5）对电子产品进行抽样</li>
+          <li>核验内容：外观、功能参数、标签合规性、包装完整性、插件适配性</li>
+          <li class="warn">发现不合格品须立即通知工厂整改，重新验货后方可放行</li>
+          <li class="note">验货合格后填写验货报告，拍摄现场照片作为存档凭证</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">验货核检清单</div>
+            <div class="substep-body">① 产品外观无划痕/变形　② 功能参数符合规格书　③ 认证标志（CE/FCC/INMETRO）正确贴附　④ 包装箱唛头准确　⑤ 装箱数量与重量核对</div>
+          </div>
+        </div>
+
+        <!-- 图片上传区 -->
+        <div class="upload-section" id="upload-inspect" onclick="event.stopPropagation()">
+          <div style="margin-top:16px;margin-bottom:8px;font-size:12px;color:var(--accent);letter-spacing:1px;font-weight:600;">
+            📋 验货图片与报告上传
+          </div>
+          <div class="upload-zone" id="zone-inspect"
+            ondragover="handleDragOver(event,'zone-inspect')"
+            ondragleave="handleDragLeave(event,'zone-inspect')"
+            ondrop="handleDrop(event,'zone-inspect','preview-inspect','count-inspect')">
+            <input type="file" accept="image/*,.pdf" multiple
+              onchange="handleFileSelect(this,'preview-inspect','count-inspect')" />
+            <div class="upload-icon">📂</div>
+            <div class="upload-label">点击或拖拽上传验货图片 / PDF报告</div>
+            <div class="upload-hint">支持 JPG · PNG · WEBP · PDF，单文件最大 20MB</div>
+          </div>
+          <div class="preview-grid" id="preview-inspect"></div>
+          <div class="file-count" id="count-inspect" style="display:none;">
+            <span>✓</span><span id="count-inspect-num">0</span> 个文件已选择
+          </div>
+          <button class="submit-btn" onclick="submitFiles('inspect')" id="btn-inspect" disabled>提交验货资料</button>
+          <div class="submit-status" id="status-inspect"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ 报关与陆上运输 -->
+    <div class="step-card" id="step-6" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">06</div>
+        <div class="step-icon">🚛</div>
+        <div class="card-title-area">
+          <div class="card-title">报关与陆上运输</div>
+          <span class="card-badge">Customs & Trucking</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">委托报关行办理出口报关手续，安排拖车提柜，完成货物从仓库到港口的陆路运输。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li>提前联系报关公司，提供装箱单、发票、合同、Form-A等单据</li>
+          <li>联系拖车公司，根据船期安排提柜时间（通常提前1-2天）</li>
+          <li>确认货物 HS 编码，核实出口退税率</li>
+          <li class="warn">出口报关时申报金额须与合同、发票保持一致，避免海关查验</li>
+          <li>办理海运保险（All Risks/一切险），保额通常为货值的110%</li>
+          <li class="note">如涉及危险品（锂电池），须额外提供危险品证明文件</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">报关所需文件</div>
+            <div class="substep-body">商业发票（Commercial Invoice）/ 装箱单（Packing List）/ 合同（Sales Contract）/ 提单草稿（B/L Draft）/ 产地证（Form A / CO）/ 检验检疫证书（如需）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑦ 监装与提单 ★上传 -->
+    <div class="step-card" id="step-7" onclick="handleCardClick(event, this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">07</div>
+        <div class="step-icon">🚢</div>
+        <div class="card-title-area">
+          <div class="card-title">提单交付与货物监装</div>
+          <span class="card-badge upload">📷 图片上传</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">我司人员赴仓库现场监装，核实装箱数量与柜号，海运公司签发提单后交付客户。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li>海运公司根据订舱确认书提供凭单（Booking Confirmation）</li>
+          <li>我司监装人员到仓库/堆场，全程监督货物装柜</li>
+          <li>核对每箱标签（唛头）、数量与装箱单一致</li>
+          <li>记录集装箱号（Container No.）和铅封号（Seal No.）</li>
+          <li class="warn">装柜结束后立即拍摄封柜照片，与铅封号一并留档</li>
+          <li>确认提单草稿（B/L Draft）无误后，通知货代出正本提单</li>
+          <li class="note">提单正本须在截止日期前寄送客户，避免延误清关</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">提单核对要点</div>
+            <div class="substep-body">托运人名称 / 收货人 / 货物描述 / 数量重量 / 港口信息（POL/POD）/ 航次 / 铅封号 / Notify Party</div>
+          </div>
+        </div>
+
+        <!-- 图片上传区 -->
+        <div class="upload-section" id="upload-loading" onclick="event.stopPropagation()">
+          <div style="margin-top:16px;margin-bottom:8px;font-size:12px;color:var(--accent);letter-spacing:1px;font-weight:600;">
+            📋 监装报告与图片上传
+          </div>
+          <div class="upload-zone" id="zone-loading"
+            ondragover="handleDragOver(event,'zone-loading')"
+            ondragleave="handleDragLeave(event,'zone-loading')"
+            ondrop="handleDrop(event,'zone-loading','preview-loading','count-loading')">
+            <input type="file" accept="image/*,.pdf" multiple
+              onchange="handleFileSelect(this,'preview-loading','count-loading')" />
+            <div class="upload-icon">📦</div>
+            <div class="upload-label">点击或拖拽上传监装图片 / 封柜照片 / 报告</div>
+            <div class="upload-hint">支持 JPG · PNG · WEBP · PDF，单文件最大 20MB</div>
+          </div>
+          <div class="preview-grid" id="preview-loading"></div>
+          <div class="file-count" id="count-loading" style="display:none;">
+            <span>✓</span><span id="count-loading-num">0</span> 个文件已选择
+          </div>
+          <button class="submit-btn" onclick="submitFiles('loading')" id="btn-loading" disabled>提交监装资料</button>
+          <div class="submit-status" id="status-loading"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑧ 结汇 -->
+    <div class="step-card" id="step-8" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">08</div>
+        <div class="step-icon">💰</div>
+        <div class="card-title-area">
+          <div class="card-title">结汇</div>
+          <span class="card-badge success">Settlement</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">货款到账后办理外汇结汇手续，同步核销与申报出口退税，完成资金回笼。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li>货款到达外汇账户后，通过银行办理结汇（USD → CNY）</li>
+          <li><span class="tag gold">重要</span>结汇后及时进行<strong>外汇核销</strong>，更新出口核销档案</li>
+          <li><span class="tag green">退税</span>根据货物 HS 编码与出口报关单，申报<strong>出口退税</strong></li>
+          <li>退税申报须在货物出口后180天内完成，确保单证齐全</li>
+          <li class="warn">注意核销与退税申报的对应关系，防止单证不符导致退税被拒</li>
+          <li class="note">电子产品退税率一般为13%，具体以财税政策为准</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">退税申报所需文件</div>
+            <div class="substep-body">出口报关单（加盖核放章）/ 出口发票 / 装箱单 / 增值税发票 / 收汇水单 / 外汇核销单</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑨ 风险防范 -->
+    <div class="step-card" id="step-9" onclick="toggleCard(this)">
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="card-header">
+        <div class="step-num">09</div>
+        <div class="step-icon">🛡️</div>
+        <div class="card-title-area">
+          <div class="card-title">风险防范</div>
+          <span class="card-badge warn">Risk Management</span>
+        </div>
+        <div class="expand-btn">▾</div>
+      </div>
+      <p class="card-summary">全流程风险管控，通过资信审查与合同存档，有效规避交易风险与法律纠纷。</p>
+      <div class="card-detail">
+        <ul class="detail-list">
+          <li><span class="tag red">核查</span><strong>资信审查</strong>：新客户合作前，通过第三方平台调查企业背景、信用记录、经营状况</li>
+          <li><span class="tag">存档</span><strong>合同存单</strong>：所有合同、订单、往来邮件须完整存档（电子+纸质）</li>
+          <li>购买<strong>出口信用保险</strong>（中信保），防范买方拒付/无力支付风险</li>
+          <li class="warn">警惕网络诈骗，核实客户邮件域名与账户信息，防范商业欺诈</li>
+          <li>遇纠纷优先协商，协商不成可申请贸仲委或ICC仲裁</li>
+          <li class="note">建议每单维护完整的"贸易档案"，包含沟通记录、单证及发货凭证</li>
+        </ul>
+        <div class="substeps">
+          <div class="substep">
+            <div class="substep-title">资信审查渠道</div>
+            <div class="substep-body">Dun & Bradstreet（邓百氏）/ 中国出口信用保险公司（中信保）/ 商务部境外投资信息 / 行业协会推荐</div>
+          </div>
+          <div class="substep">
+            <div class="substep-title">常见风险类型</div>
+            <div class="substep-body">收汇风险（买方不付款）/ 质量纠纷风险（产品不合格）/ 政策风险（关税变化、贸易壁垒）/ 汇率风险（外汇波动）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.steps-grid -->
+</main>
+
+<!-- ─── 底部 ─── -->
+<footer>
+  <p>© 2026 <span>深圳艾利德国际贸易有限公司</span> · 内部系统，仅供员工使用 · Export Workflow System</p>
+</footer>
+
+<!-- ─── 脚本 ─── -->
+<script>
+// ── 卡片展开/收起 ──
+function toggleCard(card) {
+  card.classList.toggle('expanded');
+}
+
+// 含上传区的卡片点击逻辑（避免误触）
+function handleCardClick(e, card) {
+  // 若点击了上传区内部元素，不触发展开
+  if (e.target.closest('.upload-section')) return;
+  toggleCard(card);
+}
+
+// ── 文件选择处理 ──
+const fileStores = { inspect: [], loading: [] };
+
+function handleFileSelect(input, previewId, countId) {
+  const id = previewId.includes('inspect') ? 'inspect' : 'loading';
+  const newFiles = Array.from(input.files);
+  fileStores[id].push(...newFiles);
+  renderPreviews(id, previewId, countId);
+  input.value = '';
+}
+
+function renderPreviews(id, previewId, countId) {
+  const grid = document.getElementById(previewId);
+  const countEl = document.getElementById(countId);
+  const countNum = document.getElementById(countId + '-num');
+  const btn = document.getElementById('btn-' + id);
+
+  grid.innerHTML = '';
+  fileStores[id].forEach((file, idx) => {
+    const item = document.createElement('div');
+    item.className = 'preview-item';
+
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      const url = URL.createObjectURL(file);
+      img.src = url;
+      img.alt = file.name;
+      item.appendChild(img);
+    } else {
+      // PDF 等非图片文件
+      item.style.background = 'rgba(123,47,255,0.15)';
+      item.style.display = 'flex';
+      item.style.flexDirection = 'column';
+      item.style.alignItems = 'center';
+      item.style.justifyContent = 'center';
+      item.style.padding = '8px';
+      item.innerHTML = '<div style="font-size:22px">📄</div><div style="font-size:9px;color:var(--muted);text-align:center;word-break:break-all;margin-top:4px">' + file.name.substring(0, 20) + '</div>';
+    }
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'preview-remove';
+    removeBtn.innerHTML = '✕';
+    removeBtn.onclick = (e) => {
+      e.stopPropagation();
+      fileStores[id].splice(idx, 1);
+      renderPreviews(id, previewId, countId);
+    };
+    item.appendChild(removeBtn);
+    grid.appendChild(item);
+  });
+
+  const count = fileStores[id].length;
+  if (count > 0) {
+    countEl.style.display = 'flex';
+    countNum.textContent = count;
+    btn.disabled = false;
+  } else {
+    countEl.style.display = 'none';
+    btn.disabled = true;
+  }
+}
+
+// ── 拖拽支持 ──
+function handleDragOver(e, zoneId) {
+  e.preventDefault();
+  document.getElementById(zoneId).classList.add('drag-over');
+}
+function handleDragLeave(e, zoneId) {
+  document.getElementById(zoneId).classList.remove('drag-over');
+}
+function handleDrop(e, zoneId, previewId, countId) {
+  e.preventDefault();
+  document.getElementById(zoneId).classList.remove('drag-over');
+  const id = zoneId.includes('inspect') ? 'inspect' : 'loading';
+  const files = Array.from(e.dataTransfer.files).filter(f =>
+    f.type.startsWith('image/') || f.type === 'application/pdf'
+  );
+  if (files.length === 0) return;
+  fileStores[id].push(...files);
+  renderPreviews(id, previewId, countId);
+}
+
+// ── 提交逻辑（本地演示）──
+function submitFiles(id) {
+  const btn = document.getElementById('btn-' + id);
+  const statusEl = document.getElementById('status-' + id);
+  const files = fileStores[id];
+  if (files.length === 0) return;
+
+  btn.disabled = true;
+  btn.textContent = '上传中…';
+  statusEl.className = 'submit-status';
+  statusEl.style.display = 'none';
+
+  // 模拟异步上传（实际项目中替换为真实 API 请求）
+  setTimeout(() => {
+    const label = id === 'inspect' ? '验货' : '监装';
+    statusEl.textContent = `✅ ${label}资料已成功提交！共 ${files.length} 个文件（${new Date().toLocaleString('zh-CN')}）`;
+    statusEl.className = 'submit-status success';
+
+    btn.textContent = `已提交 ${files.length} 个文件`;
+    btn.style.background = 'linear-gradient(135deg, #00aa66, #00ff9d33)';
+    btn.style.color = 'var(--success)';
+    btn.style.border = '1px solid rgba(0,255,157,0.3)';
+  }, 1200);
+}
+
+// ── 导航高亮 ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      const num = id.split('-')[1];
+      document.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+      const dot = document.querySelector(`.nav-dot[href="#step-${num}"]`);
+      if (dot) dot.classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+
+document.querySelectorAll('.step-card[id]').forEach(card => observer.observe(card));
+</script>
+</body>
+</html>
