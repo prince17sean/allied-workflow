@@ -774,15 +774,31 @@
 
 <!-- ─── 脚本 ─── -->
 <script>
-// ── 卡片展开/收起 ──
+// ── 卡片展开/收起 + 同步导航高亮 ──
+function highlightNav(stepId) {
+  document.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+  const dot = document.querySelector(`.nav-dot[href="#${stepId}"]`);
+  if (dot) {
+    dot.classList.add('active');
+    // 确保导航条将激活项滚动到可见区域
+    dot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
 function toggleCard(card) {
   card.classList.toggle('expanded');
+  // 同步高亮对应导航序号
+  highlightNav(card.id);
 }
 
 // 含上传区的卡片点击逻辑（避免误触）
 function handleCardClick(e, card) {
   // 若点击了上传区内部元素，不触发展开
-  if (e.target.closest('.upload-section')) return;
+  if (e.target.closest('.upload-section')) {
+    // 上传区点击也同步高亮导航
+    highlightNav(card.id);
+    return;
+  }
   toggleCard(card);
 }
 
